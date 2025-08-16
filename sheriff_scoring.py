@@ -18,7 +18,7 @@ class Game():
         counter_players=0
         num_players_valid=False
         while num_players_valid is False:
-            num_players=input('How many players are in the game (Between 3 and 6 players)')
+            num_players=input('How many players are in the game (Between 3 and 6 players)' )
             if num_players.isdigit():
                 if int(num_players)>=3 and int(num_players)<=6:
                     print(f'Setting up a {num_players} game')
@@ -32,7 +32,6 @@ class Game():
         while counter_players<self.num_players:
             player_name=input(f"Enter name of Player {counter_players+1}: ")
             self.players.append(Player(player_name))
-            print(self.players)
             counter_players+=1
     
 
@@ -40,7 +39,7 @@ class Game():
         """
         Score all players in player list
         """
-        for i,player in enumerate(self.players):
+        for player in self.players:
             player.scoring()
         self.appleking()
         self.cheeseking()
@@ -49,9 +48,7 @@ class Game():
         self.rankings()
 
 
-
-   
-    def appleking():
+    def appleking(self):
         """
         Score winner of apple king and queen
         Apple king gets 20
@@ -60,9 +57,44 @@ class Game():
         Add number of players rounded down.
         Don't give out queen if tied for king
 
+        Rankings is a list which has tuple for data.
+        Tuple stores player object, name, and number of apples
+         
         """
+        apple_rankings=[]
 
-    def cheeseking():
+        for player in self.players:
+            if len(apple_rankings)==0:
+                apple_rankings.append((player,player.name,player.num_apples))
+            elif player.num_apples>=apple_rankings[0][-1]:
+                apple_rankings.insert(0,(player,player.name,player.num_apples))
+            elif len(apple_rankings)==1:
+                apple_rankings.append((player,player.name,player.num_apples))
+        print(apple_rankings)
+        if apple_rankings[0][-1]==0:
+           self.apple_king_and_queen.append('No apple king or queen')
+        elif apple_rankings[0][-1]==apple_rankings[1][-1]:
+            """
+            If both players tied for apple king
+            """
+            apple_rankings[0][0].score+=15
+            apple_rankings[1][0].score+=15
+            self.apple_king_and_queen.append(f'{apple_rankings[0][1]} & {apple_rankings[0][1]}')
+
+        elif len(apple_rankings)==3:
+            """
+            Can only be 3 players if two tied for queen 
+            """
+            apple_rankings[0][0].score+=20
+            apple_rankings[1][0].score+=5
+            apple_rankings[2][0].score+=5
+            self.apple_king_and_queen.append(f'{apple_rankings[0][1]}')
+            self.apple_king_and_queen.append(f'{apple_rankings[1][1]} & {apple_rankings[2][1]}')
+        else:
+            apple_rankings[0][0].score+=20
+            apple_rankings[1][0].score+=15
+
+    def cheeseking(self):
         """
         Score winner of  cheese king and queen
         cheese king gets 15 
@@ -71,8 +103,41 @@ class Game():
         Add number of players rounded down.
         Don't give out queen if tied for king
 
+        Rankings is a list which has tuple for data.
+        Tuple stores player object, name, and amount of cheese
         """
-    def breadking():
+        cheese_rankings=[]
+        for player in self.players:
+            if len(cheese_rankings)==0:
+                cheese_rankings.append((player,player.name,player.num_cheese))
+            elif player.num_cheese>=cheese_rankings[0][-1]:
+                cheese_rankings.insert(0,(player,player.name,player.num_cheese))
+            elif len(cheese_rankings)==1:
+                cheese_rankings.append((player,player.name,player.num_cheese))
+        if cheese_rankings[0][-1]==0:
+            self.cheese_king_and_queen.append('No cheese king or queen')
+
+        elif cheese_rankings[0][-1]==cheese_rankings[1][-1]:
+            """
+            If both players tied for cheese king
+            """
+            cheese_rankings[0][0].score+=12
+            cheese_rankings[1][0].score+=12
+            self.cheese_king_and_queen.append(f'{cheese_rankings[0][1]} & {cheese_rankings[0][1]} are tied for cheese king')
+
+        elif len(cheese_rankings)==3:
+            """
+            Can only be 3 players if two tied for cheese queen 
+            """
+            cheese_rankings[0][0].score+=15
+            cheese_rankings[1][0].score+=5
+            cheese_rankings[2][0].score+=5
+            self.cheese_king_and_queen.append(f'{cheese_rankings[0][1]} is cheese king')
+            self.cheese_king_and_queen.append(f'{cheese_rankings[1][1]} & {cheese_rankings[2][1]} are tied for cheese queen')
+        else:
+            cheese_rankings[0][0].score+=15
+            cheese_rankings[1][0].score+=10
+    def breadking(self):
         """
         Score winner of  king and queen
         bread king gets 15 
@@ -80,8 +145,50 @@ class Game():
         For ties of King and Queen bonus
         Add number of players rounded down.
         Don't give out queen if tied for king
+        
+        Rankings is a list which has tuple for data.
+        Tuple stores player object, name, and amount of bread
+        
+        self.bread_king_and_queen is list of King and Queen for game
+        Player who has most or second most bread
+
+        If tied will share 
         """
-    def chickenking():
+        bread_rankings=[]
+        for player in self.players:
+            if len(bread_rankings)==0:
+                bread_rankings.append((player,player.name,player.num_bread))
+            elif player.num_bread>=bread_rankings[0][-1]:
+                bread_rankings.insert(0,(player,player.name,player.num_bread))
+            elif len(bread_rankings)==1:
+                bread_rankings.append((player,player.name,player.num_bread))
+
+        if bread_rankings[0][-1]==0:
+            self.bread_king_and_queen.append('No bread king')
+
+        if bread_rankings[0][-1]==bread_rankings[1][-1]:
+            """
+            If both players tied for bread king
+            """
+            bread_rankings[0][0].score+=12
+            bread_rankings[1][0].score+=12
+            self.bread_king_and_queen.append(f'{bread_rankings[0][1]} & {bread_rankings[0][1]}')
+
+        elif len(bread_rankings)==3:
+            """
+            Can only be 3 players if two tied for queen 
+            """
+            bread_rankings[0][0].score+=15
+            bread_rankings[1][0].score+=5
+            bread_rankings[2][0].score+=5
+            self.bread_king_and_queen.append(f'{bread_rankings[0][1]}')
+            self.bread_king_and_queen.append(f'{bread_rankings[1][1]} & {bread_rankings[2][1]}')
+        else:
+            bread_rankings[0][0].score+=15
+            bread_rankings[1][0].score+=10
+
+
+    def chickenking(self):
         """
         Score winner of  king and queen
         chicken king gets 10
@@ -90,14 +197,46 @@ class Game():
         Add number of players rounded down.
         Don't give out queen if tied for king
 
+        Rankings is a list which has tuple for data.
+        Tuple stores player object, name, and number of chickens
         """
-    
+        chicken_rankings=[]
+        for player in self.players:
+            if len(chicken_rankings)==0:
+                bread_rankings.append((player,player.name,player.num_chickens))
+            elif player.num_chickens>=chicken_rankings[0][-1]:
+                chicken_rankings.insert(0,(player,player.name,player.num_chickens))
+            elif len(chicken_rankings)==1:
+                chicken_rankings.append((player,player.name,player.num_chicken))
+        if chicken_rankings[0][-1]==0:
+            self.chicken_king_and_queen.append('No Chicken king or queen')
+        if chicken_rankings[0][-1]==chicken_rankings[1][-1]:
+            """
+            If both players tied for chicken king
+            """
+            chicken_rankings[0][0].score+=7
+            chicken_rankings[1][0].score+=7
+            self.chicken_king_and_queen.append(f'{chicken_rankings[0][1]} & {chicken_rankings[0][1]}')
+
+        elif len(chicken_rankings)==3:
+            """
+            Can only be 3 players if two tied for chicken queen 
+            """
+            chicken_rankings[0][0].score+=10
+            chicken_rankings[1][0].score+=2
+            chicken_rankings[2][0].score+=2
+            self.chicken_king_and_queen.append(f'{chicken_rankings[0][1]}')
+            self.chicken_king_and_queen.append(f'{chicken_rankings[1][1]} & {chicken_rankings[2][1]}')
+        else:
+            chicken_rankings[0][0].score+=10
+            chicken_rankings[1][0].score+=5
+   
     def rankings(self):
         """
         Rank all players in game
         """
         for player in self.players:
-            print(player)
+            print(player.name,player.score)
 
     def tie_breaking(self):
         """
@@ -132,7 +271,6 @@ class Player():
         counter_legal=0
         amount_goods=[]
         self.score_coins()
-        print(test_game.players)
         while counter_legal < 4:
             if counter_legal%2==0:
                 num_legal=input(f'How much {legal_goods[counter_legal][0]} does {self.name} have? ')
@@ -216,9 +354,26 @@ class Player():
                 print(f"Enter valid number of royal goods for {self.name}")
 
 test_game=Game()
-test_game.addplayers()
-test_game.scoreplayers()
-for counter,player in enumerate(test_game.players):
-    print(test_game.players[counter].score)
+test_game.players=[Player('a'),Player('b'),Player('c')]
+#test_game.players[0].num_cheese=8
+test_game.players[0].num_apples= 5
+#test_game.players[0].num_bread=7
+#test_game.players[0].num_chickens=
+
+#test_game.players[1].num_cheese=8
+test_game.players[1].num_apples= 5
+#test_game.players[1].num_bread=7
+#test_game.players[1].num_chickens=
+
+#test_game.players[2].num_cheese=0
+#test_game.players[2].num_bread= 6
+test_game.players[2].num_apples=6
+#test_game.players[2].num_chickens=
 
 
+
+#test_game.addplayers()
+#test_game.scoreplayers()
+test_game.cheeseking()
+#test_game.appleking()
+test_game.rankings()
