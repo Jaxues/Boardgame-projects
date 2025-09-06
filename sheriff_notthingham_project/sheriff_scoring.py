@@ -1,3 +1,4 @@
+from sheriff_player import Player
 class Game():
     def __init__(self):
         """
@@ -203,7 +204,7 @@ class Game():
         chicken_rankings=[]
         for player in self.players:
             if len(chicken_rankings)==0:
-                bread_rankings.append((player,player.name,player.num_chickens))
+                chicken_rankings.append((player,player.name,player.num_chickens))
             elif player.num_chickens>=chicken_rankings[0][-1]:
                 chicken_rankings.insert(0,(player,player.name,player.num_chickens))
             elif len(chicken_rankings)==1:
@@ -235,145 +236,13 @@ class Game():
         """
         Rank all players in game
         """
-        for player in self.players:
-            print(player.name,player.score)
+        ordered_players=[]
+        counter_index=0
+        while counter_index<self.num_players:
+            print(self.players[counter_index].name)
+            counter_index+=1
 
     def tie_breaking(self):
         """
         compares different measures in order to break ties
         """ 
-
-
-class Player():
-    def __init__(self,name):
-        self.name=name
-        self.num_apples=0
-        self.num_bread=0
-        self.num_cheese=0
-        self.num_chicken=0
-        self.contraband=False
-        self.coins=0
-        self.num_contraband=0
-        self.score=0
-    def score_coins(self):
-        denom=[1,5,20,50]
-        counter_coins=0
-        while counter_coins<4:
-            num_coins=input(f'How many ${denom[counter_coins]} coins does {self.name} have? ')
-            if num_coins.isdigit():
-                self.coins+=denom[counter_coins]*int(num_coins)
-                counter_coins+=1
-            else:
-                print(f"Please enter a valid number of coins for {self.name}")
-    
-    def scoring(self):
-        legal_goods=(('apples',2),('cheese',3),('chickens',4),('bread',3))
-        counter_legal=0
-        amount_goods=[]
-        self.score_coins()
-        while counter_legal < 4:
-            if counter_legal%2==0:
-                num_legal=input(f'How much {legal_goods[counter_legal][0]} does {self.name} have? ')
-            elif counter_legal%2==1:
-                num_legal=input(f'How many {legal_goods[counter_legal][0]} does {self.name} have? ')
-            if num_legal.isdigit():
-                self.score+=legal_goods[counter_legal][1]*int(num_legal)
-                amount_goods.append(int(num_legal))
-                counter_legal+=1
-            elif not num_legal.isdigit():
-                print(f"Enter a valid number for {self.name}")
-        self.num_apples,self.num_cheese,self.num_chickens,self.num_bread=amount_goods 
-        
-        self.has_contraband()
-
-        if self.contraband==True:
-            self.contrabandscoring()
-        print(self.score)
-
-
-    def has_contraband(self):
-        determine_contraband=False
-        while determine_contraband is False:
-            has_counter=input(f'Does {self.name} have any contraband. Answer with y or n')
-            if has_counter.lower()=='y':
-                self.contraband=True
-                determine_contraband=True
-            elif has_counter.lower()=='n':
-                determine_contraband=True
-            else:
-                print('Please enter valid input')
-        
-
-    def contrabandscoring(self):
-        illegal_goods=(('Pepper',6),('Silks',8),('Mead',7),('Crossbows',8))
-        royal_goods=(('Green Apples',4,2),('Gouda Cheese',6,2),('Rye Bread',6,2),('Golden Apples',6,3),('Blue Cheese',9,3),('Pumpernickel Bread',9,3),('Royal Roosters',8,2))
-        counter_illegal=0
-        counter_royal=0
-        type_royal=''
-        while counter_illegal<4:
-            if counter_illegal%2==0:
-                num_illegal=input(f'How many {illegal_goods[counter_illegal][0]} does {self.name} have? ')
-            elif counter_illegal%2==1:
-                num_illegal=input(f'How much {illegal_goods[counter_illegal][0]} does {self.name} have? ')
-            if num_illegal.isdigit():
-                num_illegal=int(num_illegal)
-                self.score+=illegal_goods[counter_illegal][1]*num_illegal
-                self.num_contraband+=num_illegal
-                counter_illegal+=1
-            elif not num_illegal.isdigit():
-                print("Enter valid number for {self.name}")
-        while counter_royal<7:
-            if counter_royal%7==0 or counter_royal%7==3:
-                num_royal=input(f'How many {royal_goods[counter_royal][0]} does {self.name} have? ')
-                type_royal+='apples'
-            elif counter_royal%7==1 or counter_royal%7==4:
-                num_royal=input(f'How much {royal_goods[counter_royal][0]} does {self.name} have? ')
-                type_royal+='cheese'
-
-            elif counter_royal%7==2 or counter_royal%7==5:
-                num_royal=input(f'How much {royal_goods[counter_royal][0]} does {self.name} have? ')
-                type_royal='bread'
-
-            elif counter_royal%7==6:
-                num_royal=input(f'How many {royal_goods[counter_royal][0]} does player have? ')
-                type_royal='chickens'
-            if num_royal.isdigit():
-                num_royal=int(num_royal)
-                self.score+=royal_goods[counter_royal][1]*num_royal 
-                if type_royal=='apples':
-                    self.num_apples+=royal_goods[counter_royal][2]
-                elif type_royal=='cheese':
-                   self.num_cheese+=royal_goods[counter_royal][2]
-                elif type_royal=='bread':
-                   self.num_bread+=royal_goods[counter_royal][2]
-                elif type_royal=='chickens':
-                   self.num_chickens+=royal_goods[counter_royal][2]
-                type_royal=''
-                counter_royal+=1
-            elif not num_royal.isdigit():
-                print(f"Enter valid number of royal goods for {self.name}")
-
-test_game=Game()
-test_game.players=[Player('a'),Player('b'),Player('c')]
-#test_game.players[0].num_cheese=8
-test_game.players[0].num_apples= 5
-#test_game.players[0].num_bread=7
-#test_game.players[0].num_chickens=
-
-#test_game.players[1].num_cheese=8
-test_game.players[1].num_apples= 5
-#test_game.players[1].num_bread=7
-#test_game.players[1].num_chickens=
-
-#test_game.players[2].num_cheese=0
-#test_game.players[2].num_bread= 6
-test_game.players[2].num_apples=6
-#test_game.players[2].num_chickens=
-
-
-
-#test_game.addplayers()
-#test_game.scoreplayers()
-test_game.cheeseking()
-#test_game.appleking()
-test_game.rankings()
