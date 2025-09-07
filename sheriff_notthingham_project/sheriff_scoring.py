@@ -239,8 +239,19 @@ class Game():
         ordered_players=[]
         counter_index=0
         while counter_index<self.num_players:
-            print(self.players[counter_index].name)
+            current_player=self.players[counter_index]
+            if len(ordered_players)==0:
+                ordered_players.append(current_player)
+            elif current_player.score>ordered_players[0].score:
+                ordered_players.insert(0,current_player)
+            elif current_player.score>ordered_players[counter_index-1].score:
+                ordered_players.insert(counter_index-1,current_player)
+            else:
+                ordered_players.append(current_player)
             counter_index+=1
+
+        for player in ordered_players:
+            print(player.name,player.score)
 
     def tie_breaking(self):
         """

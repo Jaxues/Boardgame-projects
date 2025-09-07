@@ -42,13 +42,12 @@ class Player():
 
         if self.contraband==True:
             self.contrabandscoring()
-        print(self.score)
 
 
     def has_contraband(self):
         determine_contraband=False
         while determine_contraband is False:
-            has_counter=input(f'Does {self.name} have any contraband. Answer with y or n')
+            has_counter=input(f'Does {self.name} have any contraband. Answer with y or n: ')
             if has_counter.lower()=='y':
                 self.contraband=True
                 determine_contraband=True
