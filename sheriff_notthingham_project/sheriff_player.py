@@ -8,6 +8,7 @@ class Player():
         self.contraband=False
         self.coins=0
         self.num_contraband=0
+        self.num_legal_goods=0
         self.score=0
     def score_coins(self):
         denom=[1,5,20,50]
@@ -32,6 +33,7 @@ class Player():
                 num_legal=input(f'How many {legal_goods[counter_legal][0]} does {self.name} have? ')
             if num_legal.isdigit():
                 self.score+=legal_goods[counter_legal][1]*int(num_legal)
+                self.num_legal_goods+=num_legal
                 amount_goods.append(int(num_legal))
                 counter_legal+=1
             elif not num_legal.isdigit():
