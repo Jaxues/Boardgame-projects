@@ -4,7 +4,7 @@ class Player():
         self.num_apples=0
         self.num_bread=0
         self.num_cheese=0
-        self.num_chicken=0
+        self.num_chickens=0
         self.contraband=False
         self.coins=0
         self.num_contraband=0
@@ -33,18 +33,15 @@ class Player():
                 num_legal=input(f'How many {legal_goods[counter_legal][0]} does {self.name} have? ')
             if num_legal.isdigit():
                 self.score+=legal_goods[counter_legal][1]*int(num_legal)
-                self.num_legal_goods+=num_legal
+                self.num_legal_goods+=int(num_legal)
                 amount_goods.append(int(num_legal))
                 counter_legal+=1
             elif not num_legal.isdigit():
                 print(f"Enter a valid number for {self.name}")
         self.num_apples,self.num_cheese,self.num_chickens,self.num_bread=amount_goods 
-        
         self.has_contraband()
-
         if self.contraband==True:
             self.contrabandscoring()
-
 
     def has_contraband(self):
         determine_contraband=False
