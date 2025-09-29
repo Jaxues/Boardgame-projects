@@ -64,7 +64,6 @@ class Game():
         """
         apple_rankings=[]
         apple_rankings=sorted(self.players,key=lambda player: player.num_apples,reverse=True)
-        print(apple_rankings[0],apple_rankings[1])
         if apple_rankings[0].num_apples==0:
            self.kings['apples']=None
            self.queens['apples']=None
@@ -76,9 +75,9 @@ class Game():
 
         elif len(apple_rankings)==3:
             """
-            Can only be 3 players if two tied for queen 
+            Can only be 3 players if two tied for apple queen 
             """
-            self.points_king_queen(apple_rankings,good,False,True)
+            self.points_king_queen(apple_rankings,'apples',False,True)
         else:
             self.points_king_queen(apple_rankings,'apples')
 
@@ -146,9 +145,6 @@ class Game():
         For ties of King and Queen bonus
         Add number of players rounded down.
         Don't give out queen if tied for king
-
-        Rankings is a list which has tuple for data.
-        Tuple stores player object, name, and number of chickens
         """
         chicken_rankings=sorted(self.players,key=lambda player: player.num_chickens,reverse=True)
         if chicken_rankings[0].num_chickens==0:
@@ -174,8 +170,22 @@ class Game():
 
 
     def points_king_queen(self,good_rankings,good,tiedfirst=False,tiedsecond=False):
-        # Condense awarding points for king and queen to one function
+        """
+        Condense awarding points for king and queen to one function
+        Assumes a maximum tie of 2 players per position.
+        Possible for more than 2 way ties. 
+        Logic easy to expand but in terms of practicality very unlikely to happen
 
+        good_rankings is sorted list of players by number of legal good that they have
+        good is string for type of good e.g. 'apples','cheese','bread','chickens'. 
+        Also key of good dictionary so case is sensitive.
+
+        tiedfirst is flag to award points if two players have same number. 
+        Points to tied king is rounded down sum of first and second points of goods
+        Also not award queen for good according to rulebook for tied king
+
+        tiedsecond is there is a player with most but two players have same amount of goods. Award points of half second points rounded down
+        """
         first_points=self.score_goods[f'{good}'][0]
         second_points=self.score_goods[f'{good}'][1]
         first=good_rankings[0]
@@ -202,10 +212,18 @@ class Game():
             self.queens[f'{good}']=f'{second.name} is the queen of {good}'
 
     def rankings(self):
+        """
+        Sorting players from 1st to last based on criteria from rulebook 
+        """
         ranked_players=sorted(self.players,key=lambda player: (player.score,player.coins,player.contraband,player.num_legal_goods),reverse=True)
+        print("\n"+"="*65)
         print("Score|Number of coins|Number of contraband| Number of legal goods")
         print('='*65)
-        for position,player in enumerate(ranked_players):
-            print(position+1,player.name,player.score,player.coins,player.num_contraband,player.num_legal_goods)
+        for player in ranked_players:
+            print(player.name,player.score,player.coins,player.num_contraband,player.num_legal_goods)
         for king,queen in zip(self.kings.values(),self.queens.values()):
             print(f"\n{king}\n{queen}")
+        print('\nName| Number of contraband| Number of apples| Number of cheese| Number of bread| Number of chickens')
+        for player in ranked_players:
+            print(player.name,player.num_contraband,player.num_apples,player.num_cheese,player.num_bread,player.num_chickens)
+
